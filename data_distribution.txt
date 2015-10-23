@@ -1,0 +1,2 @@
+longest 3712 contain 16654 molecules 2429 seq 7717
+longest 3712 raw 17010 contain 16642 molecules 2429 seq 7710
