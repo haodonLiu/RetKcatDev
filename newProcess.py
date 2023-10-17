@@ -6,7 +6,9 @@ from rdkit import Chem
 
 class process:
 
-    def __init__(self):
+    def __init__(self,filepath):
+        with open(filepath, "rt") as f:
+            self.rawdata=json.load(f)
         
         self.molmap=dict([unit[::-1] for unit in enumerate('0,C,H,O,N,P,S,B,F,Cl,Br,I,Se,s,o,n,c'.split(','))])
         
@@ -30,8 +32,7 @@ class process:
         self.data=[]
         self.n=0
 
-        with open("bin\Kcat_combination_0918.json", "rt") as f:
-            self.rawdata=json.load(f)
+        
 
         for sample in self.rawdata:
             
@@ -45,6 +46,8 @@ class process:
             
             if 'X' in seq or 'B' in seq or 'U' in seq or 'O' in seq:continue 
             #remove instandard Amino acid and rare amino
+
+            if len(seq)<5 or len(seq)>2000 : continue
             
             mol=Chem.AddHs(Chem.MolFromSmiles(smiles))
             
@@ -125,4 +128,4 @@ class process:
    
     
 
-pr=process()
+pr=process("Kcat_combination_0918.json")

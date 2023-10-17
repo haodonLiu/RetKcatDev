@@ -12,6 +12,8 @@ class GCN(nn.Module):
         self.in_features = in_features
         self.out_features = out_features
         self.weight = nn.Parameter(torch.FloatTensor(in_features, out_features))
+        self.BN = nn.BatchNorm1d(out_features)
+        self.L = nn.LeakyReLU()
         if bias:
             self.bias = nn.Parameter(torch.FloatTensor(out_features))
         else:
@@ -28,6 +30,12 @@ class GCN(nn.Module):
         support = torch.mm(input,self.weight)
         output = torch.spmm(adj, support)
         if self.bias is not None:
-            return output + self.bias
+            return self.L(self.BN(output + self.bias))
         else:
-            return output
+            return self.L(self.BN(output))
+
+if __name__ == '__main__':
+    E=torch.randn((9,9))
+    X=torch.randn((9,3))
+    model=GCN(3,3,bias=True)
+    print(model.forward(X,E))
